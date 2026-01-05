@@ -7,6 +7,7 @@ import lagunaBoundaryRaw from '../data/laguna_boundary.geojson?raw'
 const lagunaBoundary = (() => {
   try { return JSON.parse(lagunaBoundaryRaw) } catch (e) { return null }
 })()
+import q4CsvRaw from '../data/water_quality_2024_Oct-Dec.csv?raw'
 
 export default function Map({ center, zoom = 11, height = '420px' }) {
   const stations = stationsFile.stations || []
@@ -51,6 +52,7 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
   const [showBoundary, setShowBoundary] = useState(true)
   const [tileKey, setTileKey] = useState('osm')
   const [metricKey, setMetricKey] = useState('pH_units')
+  const [dataSource, setDataSource] = useState('Q1') // Q1 = bundled JSON, Q4 = CSV
 
   const TILE_SOURCES = {
     osm: {
@@ -89,9 +91,44 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
     return null
   }
 
+  // parse Q4 CSV into same shape as monitoring data
+  const q4Data = useMemo(() => {
+    try {
+      const lines = (q4CsvRaw || '').trim().split(/\r?\n/)
+      if (lines.length < 3) return null
+      // header line 1: Row,BOD (mg/L),,,DO (mg/L),,,Fecal...,,
+      // header line 2: ,Oct,Nov,Dec,Oct,Nov,Dec,Oct,Nov,Dec,Oct,Nov,Dec
+      const rows = lines.slice(2).map(l => l.split(',').map(s => s.trim()))
+      const base = monitoringDataFile.LagunaLakeStations_Q1_2024 || []
+      const out = []
+      rows.forEach((cols, idx) => {
+        const stationBase = base[idx] || { Station: `R${idx+1}`, Location: '' }
+        const obj = { Station: stationBase.Station, Location: stationBase.Location }
+        function three(start) {
+          const a = cols[start] === '' ? null : (isNaN(Number(cols[start])) ? cols[start] : Number(cols[start]))
+          const b = cols[start+1] === '' ? null : (isNaN(Number(cols[start+1])) ? cols[start+1] : Number(cols[start+1]))
+          const c = cols[start+2] === '' ? null : (isNaN(Number(cols[start+2])) ? cols[start+2] : Number(cols[start+2]))
+          return { Oct: a, Nov: b, Dec: c }
+        }
+        obj.BOD_mgL = three(1)
+        obj.DO_mgL = three(4)
+        obj.FecalColiform_MPN_100mL = three(7)
+        obj.Chloride_mgL = three(10)
+        out.push(obj)
+      })
+      return out
+    } catch (e) {
+      return null
+    }
+  }, [q4CsvRaw])
+
+  const selectedMonitoringList = useMemo(() => {
+    return dataSource === 'Q1' ? (monitoringDataFile.LagunaLakeStations_Q1_2024 || []) : (q4Data || [])
+  }, [dataSource, q4Data])
+
   // derive latest metric value per station (match by Station)
   const stationMetrics = useMemo(() => {
-    const list = (monitoringDataFile.LagunaLakeStations_Q1_2024 || []).map((s) => {
+    const list = (selectedMonitoringList || []).map((s) => {
       // pick latest month available (Mar, Feb, Jan order)
       const months = ['Mar', 'Feb', 'Jan']
       const values = {}
@@ -189,6 +226,13 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
     <div className="w-full rounded-md relative" style={{ height }}>
       <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 65000 }} className="bg-white p-2 rounded shadow">
         <div className="flex items-center space-x-3">
+            <label className="ml-1 text-lg flex items-center">
+              <span className="sr-only">Data source</span>
+              <select value={dataSource} onChange={(e) => setDataSource(e.target.value)} className="text-lg bg-white px-3 py-1.5 rounded">
+                <option value="Q1">Q1 2024 (Jan–Mar)</option>
+                <option value="Q4">Q4 2024 (Oct–Dec)</option>
+              </select>
+            </label>
           <select value={selected} onChange={(e) => setSelected(e.target.value)} className="text-lg bg-white px-3 py-1.5 rounded">
           {options.map((opt) => {
             if (opt === 'All') return <option key={opt} value={opt}>All stations</option>
