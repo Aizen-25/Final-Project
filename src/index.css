@@ -187,3 +187,59 @@ body {
 /* Parameter card titles: dark blue and bold when inside the parameter grid */
 .param-grid .kpi .label { color: var(--primary-dark); font-weight: 700; }
 
+/* Styles for the new header banner */
+.header-banner { position: relative; overflow: visible; padding: 1rem; }
+.header-banner .header-bg { filter: saturate(1.05) blur(0.2px); transform: scale(1.02); width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; pointer-events: none; }
+.header-banner .logo-blob { box-shadow: 0 8px 24px rgba(16,24,40,0.06); }
+.header-banner .icons-row .icon-circle { min-width: 64px; min-height: 64px; display: flex; align-items: center; justify-content: center; }
+.header-banner .scientist-img { transform: translateY(6px); }
+
+/* Header text: center, bold, black */
+.header-banner .header-text { text-align: center; color: #000; font-weight: 800; display: flex; flex-direction: column; justify-content: center; }
+.header-banner .header-text h1 { color: #000; font-weight: 900; }
+.header-banner .header-text div { color: #000; font-weight: 800; }
+.header-banner .header-text p { color: #000; opacity: 0.95; font-weight: 700; }
+
+/* Centered icon between title and subtitle */
+.header-banner .header-center-icon { width: 56px; height: 56px; margin: 0.6rem auto; border-radius: 999px; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(16,24,40,0.08); }
+.header-banner .header-center-icon img { display: block; }
+
+/* Updated header layout to match design image (tighter spacing) */
+.header-banner { padding: 0; border-radius: 14px; }
+.header-banner .header-content { position: relative; z-index: 10; min-height: 160px; width: 90%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.header-banner .header-title { font-size: 2rem; font-weight: 900; color: #07142b; margin: 0; }
+.header-banner .header-sub { margin-top: 6px; font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); letter-spacing: 1.6px; line-height: 1.05; }
+
+.header-banner .icons-row { display: flex; margin-top: 0.4rem; justify-content: space-between; width: 72%; max-width: 810px; }
+.header-banner .icon-badge { width: 64px; height: 64px; background: #fff; border-radius: 999px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(16,24,40,0.10); border: 4px solid rgba(255,255,255,0.95); }
+.header-banner .icon-badge img { width: 36px; height: 36px; display: block; }
+
+.header-banner .header-tagline { margin-top: 0.6rem; color: #fff; font-weight: 700; font-size: 1rem; font-style: normal; background: rgba(15,23,36,0.12); padding: 0.2rem 1rem; border-radius: 999px; max-width: 70%; text-align: center; }
+/* scientist removed */
+
+@media (max-width: 768px) {
+  .header-banner .header-title { font-size: 1.6rem; }
+  .header-banner .header-sub { font-size: 1.02rem; letter-spacing: 0.6px; }
+  .header-banner .icons-row { width: 90%; justify-content: center; gap: 1rem; }
+  .header-banner .icon-badge { width: 56px; height: 56px; border: 4px solid rgba(255,255,255,0.95); }
+  .header-banner .icon-badge img { width: 30px; height: 30px; }
+}
+
+/* Side icons (one left, one right) at the same vertical level as the icons row */
+.header-banner .side-icon { position: absolute; top: 50%; transform: translateY(-50%); width: 84px; height: 84px; padding: 10px; background: #fff; border-radius: 999px; box-shadow: 0 10px 30px rgba(16,24,40,0.12); border: 6px solid rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; }
+.header-banner .side-left { left: -10%; top: 50%; transform: translateY(-50%); width: 127px; height: 127px; padding: 0; background: #fff; border-radius: 999px; box-shadow: 0 10px 30px rgba(16,24,40,0.12); border: 6px solid rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.header-banner .side-left img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Right side uses the Scientist image — make its height match the header content */
+.header-banner .side-right { right: -10%; top: 50%; transform: translateY(-50%); height: 160px; width: auto; padding: 0; background: transparent; border-radius: 0; box-shadow: none; border: none; }
+.header-banner .side-right img { height: 100%; width: auto; display: block; }
+
+@media (max-width: 1024px) {
+  .header-banner .side-icon { width: 72px; height: 72px; padding: 8px; }
+  .header-banner .side-right { right: -6%; height: 140px; }
+  .header-banner .side-left { left: 2%; width: 107px; height: 107px; padding: 0; }
+}
+
+@media (max-width: 768px) {
+  .header-banner .side-icon { display: none; }
+}
+

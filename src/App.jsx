@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import Map from './components/Map'
 import Charts from './components/Charts'
 import SmallMultiples from './components/SmallMultiples'
+import Header from './components/Header.jsx'
 import agencies from './data/agencies.json'
 import doIcon from '../Icon/DO.png'
 import bodIcon from '../Icon/BOD.png'
@@ -74,12 +75,7 @@ export default function App() {
           </div>
 
           <div className="pl-2 md:pl-6">
-            <div className="header-bar">
-              <div>
-                <h1 className="text-2xl font-semibold">Laguna Lake Water Quality</h1>
-                <p className="text-sm muted">Overview of parameters and locations</p>
-              </div>
-            </div>
+            <Header />
 
             {active === 'dashboard' && (
               <div className="mt-4">
@@ -218,7 +214,7 @@ export default function App() {
 
                       <div className="mt-3">
                         <button onClick={() => setShowAllParams((s) => !s)} className="text-sm text-blue-600 hover:underline">
-                          {showAllParams ? 'Show less' : 'View more'}
+                          {showAllParams ? 'View less' : 'View more'}
                         </button>
                       </div>
                     </div>
