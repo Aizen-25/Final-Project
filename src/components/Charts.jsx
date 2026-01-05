@@ -245,7 +245,7 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
         </div>
 
         {showFilters && (
-          <div className="mt-3">
+          <div className="mt-6">
             <FilterBar
               viewChips={viewChips}
               years={years}
