@@ -12,6 +12,34 @@ import {
 } from 'recharts'
 import { useState, useMemo, useEffect } from 'react'
 import stationsData from '../data/monitoring_stations.json'
+import q4CsvRaw from '../data/water_quality_2024_Oct-Dec.csv?raw'
+
+// parse Q4 CSV into stations array matching monitoring_stations structure
+function parseQ4Csv(raw) {
+  try {
+    const lines = (raw || '').trim().split(/\r?\n/)
+    if (lines.length < 3) return null
+    const rows = lines.slice(2).map(l => l.split(',').map(s => s.trim()))
+    const base = stationsData.LagunaLakeStations_Q1_2024 || []
+    const out = []
+    rows.forEach((cols, idx) => {
+      const stationBase = base[idx] || { Station: `R${idx+1}`, Location: '' }
+      const obj = { Station: stationBase.Station, Location: stationBase.Location }
+      const toNum = (v) => (v === '' || v === null ? null : (isNaN(Number(v)) ? v : Number(v)))
+      function three(start) {
+        return { Oct: toNum(cols[start]), Nov: toNum(cols[start+1]), Dec: toNum(cols[start+2]) }
+      }
+      obj.BOD_mgL = three(1)
+      obj.DO_mgL = three(4)
+      obj.FecalColiform_MPN_100mL = three(7)
+      obj.Chloride_mgL = three(10)
+      out.push(obj)
+    })
+    return out
+  } catch (e) {
+    return null
+  }
+}
 import FilterBar from './FilterBarClean'
 
 const QUARTER_TO_MONTHS = {
@@ -48,7 +76,10 @@ function parseNumber(v) {
 
 export default function Charts({ showKPIs = true, showFilters = true, showStationFilter = false, selectedStation: externalSelected = '', onStationChange }) {
   const views = useMemo(() => {
-    return Object.keys(stationsData).map((k) => {
+    const q4 = parseQ4Csv(q4CsvRaw)
+    const combined = { ...stationsData }
+    if (q4 && q4.length) combined.LagunaLakeStations_Q4_2024 = q4
+    return Object.keys(combined).map((k) => {
       const m = k.match(/Q(\d)_(\d{4})/)
       if (m) {
         const q = `Q${m[1]}`
@@ -68,7 +99,10 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
     return v ? v.key : views[0]?.key
   }, [views, yearSel, quarterSel])
 
-  const stations = stationsData[selectedViewKey] || []
+  // use combined data (include parsed Q4) for stations lookup
+  const q4Parsed = useMemo(() => parseQ4Csv(q4CsvRaw), [])
+  const combinedData = useMemo(() => ({ ...stationsData, ...(q4Parsed && q4Parsed.length ? { LagunaLakeStations_Q4_2024: q4Parsed } : {}) }), [q4Parsed])
+  const stations = (combinedData[selectedViewKey] || [])
   const [selected, setSelected] = useState('')
 
   // Wrapper to update local selection and notify parent (if provided)
