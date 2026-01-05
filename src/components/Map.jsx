@@ -223,7 +223,7 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
   }, [])
 
   return (
-    <div className="w-full rounded-md relative" style={{ height }}>
+    <div className="w-full rounded-md relative mb-6" style={{ height }}>
       <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 65000 }} className="bg-white p-2 rounded shadow">
         <div className="flex items-center space-x-3">
             <label className="ml-1 text-lg flex items-center">
@@ -317,7 +317,7 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
       </MapContainer>
 
       {/* Data insight below the map explaining the legend */}
-      <div className="mt-3 text-sm text-gray-800">
+      <div className="mt-4 mb-6 text-sm text-gray-800">
         <div className="bg-white/90 p-3 rounded shadow text-sm" style={{ maxWidth: 760 }}>
           <div className="font-medium mb-1">Legend explanation</div>
           <div>Metric: {METRIC_OPTIONS.find(m => m.key === metricKey)?.label}</div>
