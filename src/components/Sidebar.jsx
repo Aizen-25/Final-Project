@@ -34,8 +34,8 @@ export default function Sidebar({ active, setActive, collapsed = false, setColla
 
   const Item = ({ name, icon: Icon, label }) => {
     const isActive = active === name
-    const containerClass = `relative w-full flex items-center ${collapsed ? 'justify-center' : 'justify-start'}`
-    const btnClass = `group flex items-center gap-3 w-full ${collapsed ? 'justify-center' : 'justify-start'} py-2 px-2 transition-all duration-150 focus:outline-none rounded-md bg-white/05 ${
+    const containerClass = `relative w-full flex items-center justify-center`
+    const btnClass = `group flex items-center gap-3 w-full justify-center py-2 pl-4 pr-2 transition-all duration-150 focus:outline-none rounded-md bg-white/05 ${
       isActive ? 'bg-white/20 text-white' : 'text-white/90 hover:bg-white/10'
     }`
     return (
@@ -52,14 +52,14 @@ export default function Sidebar({ active, setActive, collapsed = false, setColla
           </span>
           {!collapsed && (
             <span
-              className="ml-3 text-sm font-bold"
+              className="text-sm font-bold"
               style={{
                 fontFamily: 'Inter, Poppins, sans-serif',
-                flex: 1,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                fontSize: '11px'
+                fontSize: '11px',
+                textAlign: 'center'
               }}
             >
               {label}
@@ -71,14 +71,14 @@ export default function Sidebar({ active, setActive, collapsed = false, setColla
   }
 
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : 'expanded'} flex flex-col items-center py-6 gap-6 transition-all duration-200`} style={{ minWidth: collapsed ? 32 : 110 }}>
+    <aside className={`sidebar ${collapsed ? 'collapsed' : 'expanded'} flex flex-col items-center py-6 gap-6 transition-all duration-200 pl-3`} style={{ minWidth: collapsed ? 32 : 110 }}>
       <div className="flex flex-col items-center gap-2">
         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
           <div className="w-9 h-9 rounded-full bg-white/30" />
         </div>
       </div>
 
-      <nav ref={navRef} className="flex-1 w-full px-2 flex flex-col items-center gap-2" role="navigation" aria-label="Main navigation">
+      <nav ref={navRef} className="flex-1 w-full px-4 flex flex-col items-center gap-2" role="navigation" aria-label="Main navigation">
         {items.map((it) => (
           <div key={it.name} className={`item ${active === it.name ? 'active' : ''}`}>
             <Item {...it} />

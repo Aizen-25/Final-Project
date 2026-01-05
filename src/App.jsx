@@ -65,7 +65,7 @@ export default function App() {
           style={{ gridTemplateColumns: sidebarCollapsed ? '72px 1fr' : '248px 1fr' }}
         >
           {/* Sidebar (visible on all sizes) - parent controls collapsed width */}
-          <div className="block">
+          <div className="flex justify-center">
             <Sidebar
               active={active}
               setActive={setActive}
