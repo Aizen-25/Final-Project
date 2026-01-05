@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+/* Slightly reduce base font-size for a more compact dashboard */
+html { font-size: 15px; }
+
+/* Global theme adjustments to match the dashboard design */
+body {
+  background-color: #f6f5ff;
+  font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color: #1f2937;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+  padding: 1rem;
+}
+
+.kpi {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(16,24,40,0.06);
+}
+
+:root {
+  --primary: #1F8FEA; /* water blue */
+  --primary-dark: #176ab8;
+  --secondary: #2EB872; /* health green */
+  --alert: #FF7043; /* alert orange */
+  --bg: #f4f8fb;
+  --text: #0f1724;
+  --muted: #6b7280;
+  /* Sidebar sizing */
+  --sidebar-width: 165px; /* 110px * 1.5 */
+  --sidebar-collapsed-width: 72px; /* 48px * 1.5 */
+  --sidebar-icon-size: 27px;
+}
+
+/* App level helpers */
+.app-bg {
+  background: var(--bg);
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+  padding: 1rem;
+}
+
+/* Header bar */
+.header-bar {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 8px 30px rgba(16,24,40,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-bar h1 { font-size: 2.25rem; font-weight: 700; color: var(--text); }
+.header-bar .muted { color: var(--muted); font-weight: 500 }
+
+/* Sidebar label safety */
+.sidebar .item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Small slide animation for mobile overlay */
+.sidebar-overlay-enter { transform: translateX(-8px); opacity: 0 }
+.sidebar-overlay-enter-active { transform: translateX(0); opacity: 1; transition: transform .18s ease, opacity .18s ease }
+
+.btn-primary {
+  background: var(--brand-500);
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+.muted { color: var(--muted); }
+.brand-text { color: var(--brand-500); }
+
+/* Sidebar styles (used instead of Tailwind brand utilities) */
+.sidebar {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+  padding: 0.5rem 0.25rem;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+/* Keep sidebar sticky but constrained to its grid column so it doesn't overlap content */
+.sidebar {
+  position: sticky;
+  top: 1rem;
+  z-index: 20;
+}
+
+.sidebar .item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  transition: background .12s, transform .12s;
+  overflow: hidden;
+}
+
+.sidebar .item:hover { background: rgba(255,255,255,0.08); }
+.sidebar .item.active { background: rgba(255,255,255,0.12); }
+
+.sidebar.collapsed { width: var(--sidebar-collapsed-width); }
+.sidebar.expanded { width: var(--sidebar-width); }
+
+.sidebar .item svg { color: #000; width: var(--sidebar-icon-size); height: var(--sidebar-icon-size); flex: 0 0 var(--sidebar-icon-size); }
+.sidebar .item.active svg { color: #000; }
+.sidebar .item span { color: #000; font-size: 1rem; line-height: 1.15; display: inline-block; max-width: calc(100% - 48px); overflow: hidden; text-overflow: ellipsis; }
+
+/* When the sidebar is collapsed reduce padding and hide labels */
+.sidebar.collapsed .item { justify-content: center; padding: 0.3rem; }
+.sidebar.collapsed .item span { display: none; }
+
+/* Ensure buttons inside sidebar do not force wider widths */
+.sidebar .item button { min-width: 0; width: 100%; text-align: left; }
+
+/* Active accent - keep inside sidebar bounds */
+.sidebar .item.active::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 4px; background: rgba(255,255,255,0.14); border-radius: 6px; }
+
+/* hover state: subtle white overlay */
+.sidebar .item:hover { background: rgba(255,255,255,0.06); }
+
+@media (max-width: 768px) {
+  .card { padding: 0.75rem; }
+  .kpi { padding: 0.75rem; }
+}
+
+/* Ensure KPI cards sit side-by-side on medium+ screens */
+.kpi-row { display: block; }
+.kpi-row .kpi { width: 100%; margin: 0; }
+
+@media (min-width: 768px) {
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+  .kpi-row .kpi { width: auto; }
+}
+
+/* KPI typography and colors */
+.kpi { background: #fff; padding: 1.25rem; border-radius: 12px; }
+.kpi .label { font-size: 0.95rem; font-weight: 600; color: var(--muted); }
+.kpi .value { font-size: 1.75rem; font-weight: 800; color: var(--primary-dark); }
+.kpi .status { font-size: 0.95rem; font-weight: 700 }
+.kpi .status.good { color: #16a34a /* green-500 */ }
+.kpi .status.warn { color: #f59e0b /* yellow-500 */ }
+.kpi .status.critical { color: #ef4444 /* red-500 */ }
+.kpi .range { opacity: 0.85 }
+
+/* Sidebar active accent */
+.sidebar .item { position: relative }
+

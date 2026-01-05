@@ -1,0 +1,17 @@
+{
+  "stations": [
+    { "Station": "I", "Location": "West Bay (Near Muntinlupa)", "lat": 14.3722, "lon": 121.0850 },
+    { "Station": "II", "Location": "East Bay (Near Jala-jala)", "lat": 14.3014, "lon": 121.4644 },
+    { "Station": "V", "Location": "West Bay (Near Biñan)", "lat": 14.3364, "lon": 121.1292 },
+    { "Station": "VIII", "Location": "South Bay (Near Calamba)", "lat": 14.1953, "lon": 121.1969 },
+    { "Station": "XV", "Location": "West Bay (Central)", "lat": 14.3411, "lon": 121.1492 },
+    { "Station": "XVI", "Location": "West Bay (Central)", "lat": 14.3703, "lon": 121.1444 },
+    { "Station": "XVII", "Location": "Central Bay", "lat": 14.2811, "lon": 121.2333 },
+    { "Station": "XVIII", "Location": "East Bay (Central)", "lat": 14.3219, "lon": 121.4019 },
+    { "Station": "XIX", "Location": "Central Bay", "lat": 14.3000, "lon": 121.2800 },
+    { "Station": "XX", "Location": "Central Bay", "lat": 14.3061, "lon": 121.2058 },
+    { "Station": "XXI", "Location": "South Bay", "lat": 14.2406, "lon": 121.3156 },
+    { "Station": "XXII", "Location": "South Bay", "lat": 14.2831, "lon": 121.3650 },
+    { "Station": "XXIII", "Location": "East Bay", "lat": 14.3167, "lon": 121.4422 }
+  ]
+}
