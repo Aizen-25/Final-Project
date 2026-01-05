@@ -9,7 +9,7 @@ const lagunaBoundary = (() => {
 })()
 import q4CsvRaw from '../data/water_quality_2024_Oct-Dec.csv?raw'
 
-export default function Map({ center, zoom = 11, height = '420px' }) {
+export default function Map({ center, zoom = 11, height = '560px' }) {
   const stations = stationsFile.stations || []
 
   // compute default center as average if not provided
