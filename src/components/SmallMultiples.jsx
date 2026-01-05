@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis } from 'recharts'
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts'
 import stationsData from '../data/monitoring_stations.json'
 import q4CsvRaw from '../data/water_quality_2024_Oct-Dec.csv?raw'
 
@@ -93,6 +93,20 @@ export default function SmallMultiples() {
     data: months.map((m) => ({ month: m, value: parseNumber(s?.[metric]?.[m]) || null }))
   })), [stations, months, metric])
 
+  // combined data: months -> { month, S_I: val, S_II: val, ... }
+  const combinedSeries = useMemo(() => {
+    const rows = months.map((m) => ({ month: m }))
+    stations.forEach((s) => {
+      const key = s.Station || `${s.Location}`
+      months.forEach((m, idx) => {
+        rows[idx][key] = parseNumber(s?.[metric]?.[m]) || null
+      })
+    })
+    return rows
+  }, [stations, months, metric])
+
+  const [showCombined, setShowCombined] = useState(true)
+
   return (
     <div className="w-full rounded-md overflow-hidden bg-white p-3 space-y-3">
       <div className="flex items-center justify-between">
@@ -109,6 +123,31 @@ export default function SmallMultiples() {
           </select>
         </div>
       </div>
+
+      {showCombined && (
+        <div className="mb-3">
+          <div className="text-sm font-medium mb-2">All stations — {metricMeta.label} (lines)</div>
+          <div style={{ height: 260 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={combinedSeries} margin={{ top: 8, right: 12, left: 0, bottom: 6 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis domain={metricMeta.domain || ['auto','auto']} />
+                <Tooltip />
+                <Legend verticalAlign="top" height={36} />
+                {stations.map((s, i) => (
+                  <Line key={s.Station} type="monotone" dataKey={s.Station} strokeWidth={1.5} dot={false} stroke={`hsl(${(i*40) % 360} 80% 45%)`} />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="text-right mt-1"><button className="text-xs text-slate-600" onClick={() => setShowCombined(false)}>Hide combined chart</button></div>
+        </div>
+      )}
+
+      {!showCombined && (
+        <div className="mb-3 text-right"><button className="text-xs text-slate-600" onClick={() => setShowCombined(true)}>Show combined chart</button></div>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {smallMultiples.map((s) => (
