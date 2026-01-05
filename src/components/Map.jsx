@@ -223,7 +223,7 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
   }, [])
 
   return (
-    <div className="w-full rounded-md relative mb-32" style={{ height }}>
+    <div className="w-full rounded-md relative mb-40" style={{ height }}>
       <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 65000 }} className="bg-white p-2 rounded shadow">
         <div className="flex items-center space-x-3">
             <label className="ml-1 text-lg flex items-center">

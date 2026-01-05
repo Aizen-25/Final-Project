@@ -59,7 +59,7 @@ export default function App() {
 
   return (
     <div className="app-bg min-h-screen flex flex-col">
-          <div className="w-full p-6 pb-12 flex-1">
+          <div className="w-full p-6 pb-32 flex-1">
         <div
           className="grid gap-8"
           style={{ gridTemplateColumns: sidebarCollapsed ? '72px 1fr' : '248px 1fr' }}
