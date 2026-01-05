@@ -119,7 +119,8 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
 
   // metric selection state
   const [metricSel, setMetricSel] = useState('pH_units')
-  const [histogramStation, setHistogramStation] = useState('') // '' = all stations
+  // histogramMetric selects which parameter/metric to build the histogram for
+  const [histogramMetric, setHistogramMetric] = useState(metricSel)
 
   const months = useMemo(() => {
     const v = views.find((x) => x.key === selectedViewKey)
@@ -178,15 +179,8 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
   // build histogram data for the selected metric using the latest month
   const histogramData = useMemo(() => {
     const month = months[months.length - 1]
-    let vals = []
-    if (histogramStation) {
-      const key = histogramStation.split(' - ')[0]
-      const s = stations.find((x) => x.Station === key)
-      const v = parseNumber(s?.[metricSel]?.[month] ?? s?.[metricSel])
-      if (!Number.isNaN(v)) vals = [v]
-    } else {
-      vals = stations.map((s) => parseNumber(s?.[metricSel]?.[month] ?? s?.[metricSel])).filter((v) => !Number.isNaN(v))
-    }
+    // collect values for the selected histogram metric across all stations
+    const vals = stations.map((s) => parseNumber(s?.[histogramMetric]?.[month] ?? s?.[histogramMetric])).filter((v) => !Number.isNaN(v))
     if (!vals.length) return []
     const bins = 8
     const min = Math.min(...vals)
@@ -207,7 +201,7 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
       const hi = +(min + (i + 1) * width).toFixed(2)
       return { bin: `${lo}–${hi}`, count: c }
     })
-  }, [stations, months, metricSel])
+  }, [stations, months, histogramMetric])
 
   useEffect(() => {
     if (!quartersForYear || !quartersForYear.length) return
@@ -216,6 +210,7 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
 
   const latestMonth = months[months.length - 1] || ''
   const metricMeta = METRICS.find((m) => m.key === metricSel) || METRICS[0]
+  const histogramMetricMeta = METRICS.find((m) => m.key === histogramMetric) || METRICS[0]
   const viewChips = useMemo(() => views.filter((v) => v.year).map((v) => ({ key: v.key, label: `${v.quarter} ${v.year}`, year: v.year, quarter: v.quarter })), [views])
 
   const displayPeriod = (quarterSel && yearSel) ? `${quarterSel} ${yearSel}` : (views[0] ? `${views[0].quarter} ${views[0].year}` : 'All periods')
@@ -232,19 +227,7 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
             <div className="text-xs text-slate-500 mt-0.5">{chartSubtitle}</div>
           </div>
 
-          {(!showFilters && showStationFilter) && (
-            <div className="ml-4 flex items-center gap-2">
-              <select value={yearSel || ''} onChange={(e) => { setYearSel(e.target.value); setQuarterSel(null) }} className="px-2 py-1 border rounded text-sm bg-white">
-                <option value="">All Years</option>
-                {years.map((y) => <option key={y} value={y}>{y}</option>)}
-              </select>
-
-              <select value={selected || ''} onChange={(e) => updateSelected(e.target.value)} className="px-2 py-1 border rounded text-sm bg-white">
-                <option value="">All Stations</option>
-                {stationOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-              </select>
-            </div>
-          )}
+          {/* station selector removed from header to avoid confusion with histogram filter */}
         </div>
 
         {showFilters && (
@@ -336,12 +319,11 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
       {/* Distribution histogram for selected metric (latest month) */}
       <div className="mt-4">
         <div className="flex items-center justify-between">
-          <div className="text-sm font-semibold text-slate-700 mb-2">Distribution — {metricMeta.label} ({latestMonth})</div>
+          <div className="text-sm font-semibold text-slate-700 mb-2">Distribution — {histogramMetricMeta.label} ({latestMonth})</div>
           <div className="flex items-center gap-2">
-            <label className="text-xs text-slate-500 mr-2">Histogram filter</label>
-            <select value={histogramStation || ''} onChange={(e) => setHistogramStation(e.target.value)} className="px-2 py-1 border rounded text-sm bg-white">
-              <option value="">All Stations</option>
-              {stationOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+            <label className="text-xs text-slate-500 mr-2">Histogram parameter</label>
+            <select value={histogramMetric || ''} onChange={(e) => setHistogramMetric(e.target.value)} className="px-2 py-1 border rounded text-sm bg-white">
+              {METRICS.map((m) => <option key={m.key} value={m.key}>{m.label}</option>)}
             </select>
           </div>
         </div>
@@ -356,7 +338,7 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="text-xs text-slate-500 mt-2">Histogram of station values for the latest month; bins show value ranges and counts.</div>
+        <div className="text-xs text-slate-500 mt-2">Histogram of {histogramMetricMeta.label} for {latestMonth} across stations; bins show value ranges and counts.</div>
       </div>
     </div>
   )
