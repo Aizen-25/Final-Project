@@ -1,9 +1,17 @@
 import { useState } from 'react'
 import Sidebar from './components/Sidebar'
+import Footer from './components/Footer'
 import Map from './components/Map'
 import Charts from './components/Charts'
 import SmallMultiples from './components/SmallMultiples'
 import agencies from './data/agencies.json'
+import doIcon from '../Icon/DO.png'
+import bodIcon from '../Icon/BOD.png'
+import phIcon from '../Icon/ph.png'
+import codIcon from '../Icon/COD.png'
+import turbidityIcon from '../Icon/turbidity.png'
+import temperatureIcon from '../Icon/temperature.png'
+import waterParamIcon from '../Icon/water.png'
 import stationsData from './data/monitoring_stations.json'
 import { useMemo } from 'react'
 
@@ -11,6 +19,7 @@ export default function App() {
   const [active, setActive] = useState('water')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [dashboardStation, setDashboardStation] = useState('')
+  const [showAllParams, setShowAllParams] = useState(false)
 
   function parseNumber(v) {
     if (v === null || v === undefined) return NaN
@@ -48,8 +57,8 @@ export default function App() {
   const maxFec = _fecVals.length ? Math.max(..._fecVals) : null
 
   return (
-    <div className="app-bg min-h-screen">
-      <div className="max-w-7xl mx-auto p-6">
+    <div className="app-bg min-h-screen flex flex-col">
+      <div className="w-full p-6 flex-1">
         <div
           className="grid gap-8"
           style={{ gridTemplateColumns: sidebarCollapsed ? '72px 1fr' : '248px 1fr' }}
@@ -128,6 +137,93 @@ export default function App() {
                     </div>
                   )}
 
+                  {/* Parameter explanation cards shown on the Dashboard view */}
+                  {active === 'dashboard' && (
+                    <div className="col-span-3 mt-6 p-4">
+                      <div className="text-sm param-title mb-4">Water Quality Parameters — What they indicate</div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 param-grid">
+                        <div className="kpi">
+                          <div className="flex items-start gap-3">
+                            <img src={doIcon} alt="DO" className="object-contain" style={{ width: '81px', height: '81px' }} />
+                            <div className="flex-1">
+                              <div className="label muted">Dissolved Oxygen (DO)</div>
+                              <div className="mt-2 text-sm">Amount of oxygen dissolved in water; essential for aquatic life. Low DO can indicate organic pollution, eutrophication, or thermal stress.</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="kpi">
+                          <div className="flex items-start gap-3">
+                            <img src={phIcon} alt="pH" className="object-contain" style={{ width: '81px', height: '81px' }} />
+                            <div className="flex-1">
+                              <div className="label muted">pH Level</div>
+                              <div className="mt-2 text-sm">Measures acidity/alkalinity. Most freshwater organisms prefer pH ~6.5–8.5; extremes can harm aquatic life and change chemical availability.</div>
+                            </div>
+                          </div>
+                        </div>
+                        {showAllParams && (
+                          <>
+                            <div className="kpi">
+                              <div className="flex items-start gap-3">
+                                <img src={bodIcon} alt="BOD" className="object-contain" style={{ width: '81px', height: '81px' }} />
+                                <div className="flex-1">
+                                  <div className="label muted">Biochemical Oxygen Demand (BOD)</div>
+                                  <div className="mt-2 text-sm">Estimate of biodegradable organic matter. High BOD means microbes consume more oxygen, which can lower DO and stress organisms.</div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="kpi">
+                              <div className="flex items-start gap-3">
+                                <img src={codIcon} alt="COD" className="object-contain" style={{ width: '81px', height: '81px' }} />
+                                <div className="flex-1">
+                                  <div className="label muted">Chemical Oxygen Demand (COD)</div>
+                                  <div className="mt-2 text-sm">Total oxygen required to chemically oxidize organic and inorganic matter. COD complements BOD and can reveal non-biodegradable pollutants.</div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="kpi">
+                              <div className="flex items-start gap-3">
+                                <img src={turbidityIcon} alt="Turbidity" className="object-contain" style={{ width: '81px', height: '81px' }} />
+                                <div className="flex-1">
+                                  <div className="label muted">Turbidity</div>
+                                  <div className="mt-2 text-sm">Cloudiness caused by suspended particles. High turbidity reduces light penetration, harms photosynthesis, and can carry contaminants.</div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="kpi">
+                              <div className="flex items-start gap-3">
+                                <img src={temperatureIcon} alt="Temperature" className="object-contain" style={{ width: '81px', height: '81px' }} />
+                                <div className="flex-1">
+                                  <div className="label muted">Temperature</div>
+                                  <div className="mt-2 text-sm">Affects DO, metabolism, and species distribution. Warmer water holds less oxygen and can increase biological activity.</div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="kpi">
+                              <div className="flex items-start gap-3">
+                                <img src={waterParamIcon} alt="Nitrate / Phosphate" className="object-contain" style={{ width: '81px', height: '81px' }} />
+                                <div className="flex-1">
+                                  <div className="label muted">Nitrate / Phosphate</div>
+                                  <div className="mt-2 text-sm">Nutrients that fuel algae growth. Excessive levels cause eutrophication and harmful algal blooms, impacting oxygen and water quality.</div>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      <div className="mt-3">
+                        <button onClick={() => setShowAllParams((s) => !s)} className="text-sm text-blue-600 hover:underline">
+                          {showAllParams ? 'Show less' : 'View more'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* removed Site Trends and Summary per request */}
                 </div>
 
@@ -154,6 +250,7 @@ export default function App() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

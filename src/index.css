@@ -170,3 +170,20 @@ body {
 /* Sidebar active accent */
 .sidebar .item { position: relative }
 
+/* Parameter grid: force two columns on medium+ screens and ensure .kpi items behave as grid children */
+.param-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) {
+  .param-grid { grid-template-columns: repeat(2, 1fr); }
+  .param-grid .kpi { width: auto; }
+}
+
+/* Make each parameter card have comfortable inner padding and align icon/text */
+.param-grid .kpi { padding: 1.5rem; display: flex; align-items: flex-start; gap: 2rem; }
+.param-grid .kpi img { flex: 0 0 auto; margin-right: 0.5rem; }
+
+/* Dashboard parameter heading style */
+.param-title { color: var(--text); font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
+
+/* Parameter card titles: dark blue and bold when inside the parameter grid */
+.param-grid .kpi .label { color: var(--primary-dark); font-weight: 700; }
+

@@ -173,29 +173,29 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
 
   return (
     <div className="w-full rounded-md relative" style={{ height }}>
-      <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 65000 }} className="bg-white p-1 rounded shadow">
-        <div className="flex items-center space-x-2">
-          <select value={selected} onChange={(e) => setSelected(e.target.value)} className="text-sm bg-white px-2 py-1 rounded">
+      <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 65000 }} className="bg-white p-2 rounded shadow">
+        <div className="flex items-center space-x-3">
+          <select value={selected} onChange={(e) => setSelected(e.target.value)} className="text-lg bg-white px-3 py-1.5 rounded">
           {options.map((opt) => {
             if (opt === 'All') return <option key={opt} value={opt}>All stations</option>
             const s = stations.find((x) => x.Station === opt)
             return <option key={opt} value={opt}>{opt} — {s?.Location ?? ''}</option>
           })}
           </select>
-          <label className="ml-1 text-sm flex items-center">
-            <input type="checkbox" checked={showBoundary} onChange={(e) => setShowBoundary(e.target.checked)} className="mr-2" />
+          <label className="ml-1 text-lg flex items-center">
+            <input type="checkbox" checked={showBoundary} onChange={(e) => setShowBoundary(e.target.checked)} className="mr-3 h-5 w-5" />
             <span>Boundary</span>
           </label>
-          <label className="ml-1 text-sm flex items-center">
+          <label className="ml-1 text-lg flex items-center">
             <span className="sr-only">Map view</span>
-            <select value={tileKey} onChange={(e) => setTileKey(e.target.value)} className="text-sm bg-white px-2 py-1 rounded">
+            <select value={tileKey} onChange={(e) => setTileKey(e.target.value)} className="text-lg bg-white px-3 py-1.5 rounded">
               <option value="osm">Street</option>
               <option value="satellite">Satellite</option>
             </select>
           </label>
-          <label className="ml-1 text-sm flex items-center">
+          <label className="ml-1 text-lg flex items-center">
             <span className="sr-only">Metric</span>
-            <select value={metricKey} onChange={(e) => setMetricKey(e.target.value)} className="text-sm bg-white px-2 py-1 rounded">
+            <select value={metricKey} onChange={(e) => setMetricKey(e.target.value)} className="text-lg bg-white px-3 py-1.5 rounded">
               {METRIC_OPTIONS.map((m) => <option key={m.key} value={m.key}>{m.label}</option>)}
             </select>
           </label>

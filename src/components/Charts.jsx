@@ -242,6 +242,8 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
         </div>
       )}
 
+      {/* Parameter explanation cards removed from Water view — kept on Dashboard */}
+
       <div style={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={series} margin={{ top: 8, right: 18, left: 0, bottom: 6 }}>
