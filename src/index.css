@@ -206,8 +206,7 @@ body {
 .header-banner .header-center-icon { width: 56px; height: 56px; margin: 0.6rem auto; border-radius: 999px; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(16,24,40,0.08); }
 .header-banner .header-center-icon img { display: block; }
 
-/* Updated header layout to match design image (tighter spacing) */
-.header-banner { padding: 0; border-radius: 14px; }
+.header-banner { padding: 0 0 2rem 0; border-radius: 14px; }
 .header-banner .header-content { position: relative; z-index: 10; min-height: 160px; width: 90%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .header-banner .header-title { font-size: 2rem; font-weight: 900; color: #07142b; margin: 0; }
 .header-banner .header-sub { margin-top: 6px; font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); letter-spacing: 1.6px; line-height: 1.05; }
