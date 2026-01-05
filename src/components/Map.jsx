@@ -3,6 +3,10 @@ import L from 'leaflet'
 import { useState, useMemo, useEffect } from 'react'
 import stationsFile from '../data/stations_with_coords.json'
 import monitoringDataFile from '../data/monitoring_stations.json'
+import lagunaBoundaryRaw from '../data/laguna_boundary.geojson?raw'
+const lagunaBoundary = (() => {
+  try { return JSON.parse(lagunaBoundaryRaw) } catch (e) { return null }
+})()
 
 export default function Map({ center, zoom = 11, height = '420px' }) {
   const stations = stationsFile.stations || []
@@ -158,13 +162,23 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
     async function fetchBoundary() {
       try {
         const res = await fetch('https://nominatim.openstreetmap.org/search.php?format=geojson&q=Laguna%20de%20Bay&polygon_geojson=1')
-        if (!res.ok) return
+        if (!res.ok) {
+          // fallback to bundled geojson
+          if (!cancelled) setLagunaGeo(lagunaBoundary)
+          return
+        }
         const data = await res.json()
         if (cancelled) return
         // prefer the first feature (should be the lake)
-        if (data && data.features && data.features.length) setLagunaGeo(data)
+        if (data && data.features && data.features.length) {
+          setLagunaGeo(data)
+        } else {
+          // external source didn't return geometry; use bundled fallback
+          setLagunaGeo(lagunaBoundary)
+        }
       } catch (e) {
-        // ignore fetch errors
+        // on fetch error, use bundled geojson so boundary still displays
+        if (!cancelled) setLagunaGeo(lagunaBoundary)
       }
     }
     fetchBoundary()
