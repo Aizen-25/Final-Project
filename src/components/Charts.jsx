@@ -227,7 +227,21 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
             <div className="text-xs text-slate-500 mt-0.5">{chartSubtitle}</div>
           </div>
 
-          {/* station selector removed from header to avoid confusion with histogram filter */}
+          {showStationFilter && (
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <select value={selected} onChange={(e) => updateSelected(e.target.value)} className="text-sm bg-white px-2 py-1 border rounded">
+                  <option value="">All stations</option>
+                  {stationOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+                {selected && (
+                  <button type="button" onClick={() => updateSelected('')} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {showFilters && (

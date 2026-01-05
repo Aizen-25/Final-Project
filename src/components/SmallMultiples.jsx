@@ -81,6 +81,8 @@ export default function SmallMultiples() {
   }, [views, yearSel, quarterSel])
 
   const stations = combined[selectedViewKey] || []
+  const stationOptions = stations.map((s) => `${s.Station} - ${s.Location}`)
+  const [selectedStation, setSelectedStation] = useState('')
   const months = useMemo(() => {
     const v = views.find((x) => x.key === selectedViewKey)
     return v?.months || []
@@ -88,22 +90,29 @@ export default function SmallMultiples() {
 
   const metricMeta = METRICS.find((m) => m.key === metric) || METRICS[0]
 
-  const smallMultiples = useMemo(() => stations.map((s) => ({
+  const filteredStations = useMemo(() => {
+    if (!selectedStation) return stations
+    const key = selectedStation.split(' - ')[0]
+    return stations.filter((s) => s.Station === key)
+  }, [stations, selectedStation])
+
+  const smallMultiples = useMemo(() => filteredStations.map((s) => ({
     station: `${s.Station} - ${s.Location}`,
     data: months.map((m) => ({ month: m, value: parseNumber(s?.[metric]?.[m]) || null }))
-  })), [stations, months, metric])
+  })), [filteredStations, months, metric])
 
   // combined data: months -> { month, S_I: val, S_II: val, ... }
   const combinedSeries = useMemo(() => {
     const rows = months.map((m) => ({ month: m }))
-    stations.forEach((s) => {
+    const used = filteredStations
+    used.forEach((s) => {
       const key = s.Station || `${s.Location}`
       months.forEach((m, idx) => {
         rows[idx][key] = parseNumber(s?.[metric]?.[m]) || null
       })
     })
     return rows
-  }, [stations, months, metric])
+  }, [filteredStations, months, metric])
 
   const [showCombined, setShowCombined] = useState(true)
 
@@ -112,6 +121,17 @@ export default function SmallMultiples() {
       <div className="flex items-center justify-between">
         <div className="text-sm muted">Small multiples — {metricMeta.label} per station</div>
         <div className="flex items-center gap-2">
+          <div className="relative">
+            <select value={selectedStation} onChange={(e) => setSelectedStation(e.target.value)} className="text-sm bg-white px-2 py-1 border rounded">
+              <option value="">All stations</option>
+              {stationOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+            {selectedStation && (
+              <button type="button" onClick={() => setSelectedStation('')} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
+                ✕
+              </button>
+            )}
+          </div>
           <select value={metric} onChange={(e) => setMetric(e.target.value)} className="text-sm bg-white px-2 py-1 border rounded">
             {METRICS.map((m) => <option key={m.key} value={m.key}>{m.label}</option>)}
           </select>
@@ -135,7 +155,7 @@ export default function SmallMultiples() {
                 <YAxis domain={metricMeta.domain || ['auto','auto']} />
                 <Tooltip />
                 <Legend verticalAlign="top" height={36} />
-                {stations.map((s, i) => (
+                {filteredStations.map((s, i) => (
                   <Line key={s.Station} type="monotone" dataKey={s.Station} strokeWidth={1.5} dot={false} stroke={`hsl(${(i*40) % 360} 80% 45%)`} />
                 ))}
               </LineChart>
