@@ -78,7 +78,7 @@ export default function App() {
             <Header />
 
             {active === 'dashboard' && (
-              <div className="mt-4">
+              <div className="mt-8">
                 <div className="flex items-center gap-3">
                   <label className="text-sm muted">Dashboard Filter:</label>
                   <select value={dashboardStation} onChange={(e) => setDashboardStation(e.target.value)} className="px-2 py-1 border rounded text-sm bg-white">
@@ -101,7 +101,7 @@ export default function App() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                   {active !== 'water' && (
                     <div className="col-span-3 kpi-row">
                       <div className="kpi">
