@@ -119,6 +119,7 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
 
   // metric selection state
   const [metricSel, setMetricSel] = useState('pH_units')
+  const [histogramStation, setHistogramStation] = useState('') // '' = all stations
 
   const months = useMemo(() => {
     const v = views.find((x) => x.key === selectedViewKey)
@@ -177,7 +178,15 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
   // build histogram data for the selected metric using the latest month
   const histogramData = useMemo(() => {
     const month = months[months.length - 1]
-    const vals = stations.map((s) => parseNumber(s?.[metricSel]?.[month] ?? s?.[metricSel])).filter((v) => !Number.isNaN(v))
+    let vals = []
+    if (histogramStation) {
+      const key = histogramStation.split(' - ')[0]
+      const s = stations.find((x) => x.Station === key)
+      const v = parseNumber(s?.[metricSel]?.[month] ?? s?.[metricSel])
+      if (!Number.isNaN(v)) vals = [v]
+    } else {
+      vals = stations.map((s) => parseNumber(s?.[metricSel]?.[month] ?? s?.[metricSel])).filter((v) => !Number.isNaN(v))
+    }
     if (!vals.length) return []
     const bins = 8
     const min = Math.min(...vals)
@@ -326,7 +335,16 @@ export default function Charts({ showKPIs = true, showFilters = true, showStatio
 
       {/* Distribution histogram for selected metric (latest month) */}
       <div className="mt-4">
-        <div className="text-sm font-semibold text-slate-700 mb-2">Distribution — {metricMeta.label} ({latestMonth})</div>
+        <div className="flex items-center justify-between">
+          <div className="text-sm font-semibold text-slate-700 mb-2">Distribution — {metricMeta.label} ({latestMonth})</div>
+          <div className="flex items-center gap-2">
+            <label className="text-xs text-slate-500 mr-2">Histogram filter</label>
+            <select value={histogramStation || ''} onChange={(e) => setHistogramStation(e.target.value)} className="px-2 py-1 border rounded text-sm bg-white">
+              <option value="">All Stations</option>
+              {stationOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+            </select>
+          </div>
+        </div>
         <div style={{ height: 220 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={histogramData} margin={{ top: 8, right: 18, left: 0, bottom: 6 }}>
