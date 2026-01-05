@@ -223,7 +223,7 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
   }, [])
 
   return (
-    <div className="w-full rounded-md relative mb-40" style={{ height }}>
+    <div className="w-full rounded-md relative mb-40 flex flex-col overflow-auto" style={{ height }}>
       <div style={{ position: 'absolute', right: 12, top: 12, zIndex: 65000 }} className="bg-white p-2 rounded shadow">
         <div className="flex items-center space-x-3">
             <label className="ml-1 text-lg flex items-center">
@@ -261,7 +261,7 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
       </div>
 
 
-      <MapContainer center={selectedCoords || defaultCenter} zoom={zoom} className="h-full w-full">
+      <MapContainer center={selectedCoords || defaultCenter} zoom={zoom} className="w-full flex-1" style={{ minHeight: 0 }}>
         {/* Laguna de Bay boundary overlay (authoritative from OSM) */}
         {lagunaGeo && showBoundary && <GeoJSON data={lagunaGeo} style={{ color: '#1e40af', weight: 2, fillColor: '#60a5fa', fillOpacity: 0.08 }} />}
         <TileLayer
@@ -316,9 +316,9 @@ export default function Map({ center, zoom = 11, height = '420px' }) {
         {selectedCoords && <MapCenterer coord={selectedCoords} />}
       </MapContainer>
 
-      {/* Data insight below the map explaining the legend */}
-      <div className="mt-4 mb-12 text-sm text-gray-800" style={{ position: 'relative', zIndex: 700 }}>
-        <div className="bg-white/90 p-3 rounded shadow text-sm" style={{ maxWidth: 760 }}>
+      {/* Legend explanation moved inside the map card so it scrolls with the card */}
+      <div className="mt-2 mb-4 text-sm text-gray-800 px-4">
+        <div className="bg-white/90 p-3 rounded shadow text-sm max-w-full" style={{ maxWidth: 760 }}>
           <div className="font-medium mb-1">Legend explanation</div>
           <div>Metric: {METRIC_OPTIONS.find(m => m.key === metricKey)?.label}</div>
           <div className="mt-1">Color: green → red shows the relative value (low → high) for the selected metric.</div>
