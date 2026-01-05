@@ -101,7 +101,7 @@ export default function App() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 pt-6">
                   {active !== 'water' && (
                     <div className="col-span-3 kpi-row">
                       <div className="kpi">
