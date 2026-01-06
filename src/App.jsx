@@ -17,7 +17,7 @@ import stationsData from './data/monitoring_stations.json'
 import { useMemo } from 'react'
 
 export default function App() {
-  const [active, setActive] = useState('water')
+  const [active, setActive] = useState('dashboard')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [dashboardStation, setDashboardStation] = useState('')
   const [showAllParams, setShowAllParams] = useState(false)
@@ -80,7 +80,7 @@ export default function App() {
             {active === 'dashboard' && (
               <div className="mt-8 mb-6">
                 <div className="flex items-center gap-3">
-                  <label className="text-sm muted">Dashboard Filter:</label>
+                  <label className="text-sm muted mr-8">Station</label>
                   <select value={dashboardStation} onChange={(e) => setDashboardStation(e.target.value)} className="px-2 py-1 border rounded text-sm bg-white">
                     <option value="">All Stations</option>
                     {stationOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
@@ -135,7 +135,7 @@ export default function App() {
 
                   {/* Parameter explanation cards shown on the Dashboard view */}
                   {active === 'dashboard' && (
-                    <div className="col-span-3 mt-6 p-4">
+                    <div className="col-span-3 mt-16 p-4">
                       <div className="text-sm param-title mb-4">Water Quality Parameters — What they indicate</div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 param-grid">
                         <div className="kpi">
